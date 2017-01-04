@@ -63,5 +63,17 @@ app.put('/products/:id', function(req, res){
 	});
 });
 
+app.delete('/products/:id', function(req, res){
+	console.log('Fetching Product...');
+	db.products.remove({_id:mongojs.ObjectId(req.params.id)}, function(err, doc){
+		if(err){
+			res.send(err);
+		} else {
+			console.log('Removing Product...');
+			res.json(doc);
+		}
+	});
+});
+
 app.listen(3000);
 console.log('Server is running on port 3000...');
