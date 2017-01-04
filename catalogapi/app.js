@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var mongojs = require('mongojs');
 var db = mongojs('catalogapi', ['products']);
+
+app.use(bodyParser.json());
 
 app.get('/', function(req, res){
 	res.send('It Works!');
@@ -15,6 +18,29 @@ app.get('/products', function(req, res){
 		} else {
   			console.log('Sending Products...');
   			res.json(docs);
+		}
+	});
+});
+
+app.get('/products/:id', function(req, res){
+	console.log('Fetching Product...');
+	db.products.findOne({_id:mongojs.ObjectId(req.params.id)}, function(err, doc){
+		if(err){
+			res.send(err);
+		} else {
+			console.log('Sending Product...');
+			res.json(doc);
+		}
+	});
+});
+
+app.post('/products', function(req, res){
+	db.products.insert(req.body, function(err, doc){
+		if(err){
+			res.send(err);
+		} else {
+			console.log('Adding Product...');
+			res.json(doc);
 		}
 	});
 });
