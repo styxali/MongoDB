@@ -45,5 +45,23 @@ app.post('/products', function(req, res){
 	});
 });
 
+app.put('/products/:id', function(req, res){
+	db.products.findAndModify({query: {_id: mongojs.ObjectId(req.params.id)},
+		update:{$set:{
+			name: req.body.name,
+			category: req.body.category,
+			description: req.body.description
+		}},
+		new: true
+}, function(err, doc){
+		if(err){
+			res.send(err);
+		} else {
+			console.log('Updating Product...');
+			res.json(doc);
+		}
+	});
+});
+
 app.listen(3000);
 console.log('Server is running on port 3000...');
